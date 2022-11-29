@@ -6,34 +6,56 @@ import Select from "react-select";
 
 export const ResourceRequisition = () => {
 
+  const [resourcedata, SetResourceData] = useState({});
   const [selectedList, setSelectedList] = useState([]);
   const handleChange = async (e) => {
-
-    let { options } = e.target;
-    options = Array.apply(null, options)
-    const selectedValues = options.filter(x => x.selected).map(x => x.value);
-    setSelectedList(selectedValues);
-    const param = {
-      resources: selectedList
-    };
-    var str="";
-    for(let i=0;i<selectedList.length;i++){
-      str=str.concat(selectedList[i]);
-      str=str.concat(" ");
-
+      let { options } = e.target;
+      options = Array.apply(null, options)
+      const selectedValues = options.filter(x => x.selected).map(x => x.value);
+      setSelectedList(selectedValues);
+      const param = {
+        resources: selectedList
+      };
+      var str="";
+      let str1= "";
+      
+      for(let i=0;i<selectedList.length;i++){
+        str1=str1.concat(selectedList[i]);
+        str=str.concat(selectedList[i]);
+        str1=str1.concat("|");
+        str=str.concat(" ");
   }
-  console.log("str  :: "+str);
+  
   const res=await  axios.get(`http://localhost:8080/api/viewTechnology/${str}`);
   setTechnologydata(res.data);
-  SetResourceData({ ...resourcedata, technologyData: e.target.value });
+  SetResourceData({ ...resourcedata, technologyData: str1 });
 
-  console.log(res)
+  
   // setTechnologydata(res);
    // console.log(selectedList);
     //const technologies = axios.get(`http://localhost:8080/api/viewTechnology/`) 
   }
 
-  const [resourcedata, SetResourceData] = useState({});
+  const [techSpecialization, setTechSpecialization] = useState([]);
+  const handleTechnologySpecialization = (e) => {
+    let { options } = e.target;
+    options = Array.apply(null, options)
+    const selectedValues = options.filter(x => x.selected).map(x => x.value);
+    console.log(selectedValues)
+    setTechSpecialization(selectedValues);
+  
+    let str1 = "";
+    for(let i=0;i<selectedTechnology.length;i++){
+      str1=str1.concat(selectedTechnology[i]);
+      str1=str1.concat("|");
+    }
+
+    SetResourceData({ ...resourcedata, techSpecialization: str1 });
+  }
+
+  console.log(resourcedata);
+  const [selectedTechnology, setSelectedTechnology] = useState([]);
+  const [skillData, setSkillData]=useState([]);
   // console.log(resourcedata)
   const [viewDomainsdata, setViewDomainsdata] = useState([]);
   const [hiringTypedata, setHiringTypedata] = useState([]);
@@ -55,7 +77,7 @@ export const ResourceRequisition = () => {
   const getdata = async () => {
     const result = await axios.get("http://localhost:8080/api/viewdomains");
     setViewDomainsdata(result.data);
-    // console.log(viewDomainsdata)
+    
     const result1 = await axios.get("http://localhost:8080/api/hiringType");
     setHiringTypedata(result1.data);
     const result2 = await axios.get("http://localhost:8080/api/country");
@@ -63,16 +85,16 @@ export const ResourceRequisition = () => {
     
     
     
-    const result8 = await axios.get(
-      "http://localhost:8080/api/otherqualificationDegree"
-    );
-    setOtherGraduationdata(result8.data);
-    const result9 = await axios.get(
-      "http://localhost:8080/api/otherqualificationSpecialization"
-    );
-    setOtherGraduationspecialization(result9.data);
-    const result10 = await axios.get("http://localhost:8080/api/getEmployee");
-    setEmployee(result10.data);
+    // const result8 = await axios.get(
+    //   "http://localhost:8080/api/otherqualificationDegree"
+    // );
+    // setOtherGraduationdata(result8.data);
+    // const result9 = await axios.get(
+    //   "http://localhost:8080/api/otherqualificationSpecialization"
+    // );
+    // setOtherGraduationspecialization(result9.data);
+    // const result10 = await axios.get("http://localhost:8080/api/getEmployee");
+    // setEmployee(result10.data);
   }
     // console.log(ressult11);
    
@@ -121,17 +143,17 @@ export const ResourceRequisition = () => {
 
   const handleTypeofDeveloper =async (e) => {
     let { options } = e.target;
-    console.log(options)
+    
     options = Array.apply(null, options)
     const selectedValues = options.filter(x => x.selected).map(x => x.value);
     setSelectedList(selectedValues);
-    console.log(selectedList);
+    
     alert("2");
     let id = e.target.value;
     alert("id "+id);
    // const res = await axios.get(`http://localhost:8080/api/viewTechnology/${id}`);
     //setTechnologydata(res.data);
-    console.log(id)
+   
   
     setDeveloper(Array.isArray(e) ? e.map((x) => x.label) : []);
     SetResourceData({ ...resourcedata, resource: e.target.value });
@@ -140,9 +162,32 @@ export const ResourceRequisition = () => {
   // console.log(developer);
   // const typeOfDeveloper = [{ value: 1, label: "Full Stack" }];
 
-  var [technology, setTechnology] = useState();
-  var handleTechnology = (e) => {
-    setTechnology(Array.isArray(e) ? e.map((x) => x.label) : []);
+  
+  // var handleTechnology = (e) => { 
+  // };
+  var handleTechnology = async (e) => {
+    let { options } = e.target;
+    options = Array.apply(null, options)
+    const selectedValues = options.filter(x => x.selected).map(x => x.value);
+    
+    setSelectedTechnology(selectedValues);
+    const param = {
+      resources: selectedTechnology
+    };
+    var str="";
+    let str1 = "";
+    for(let i=0;i<selectedTechnology.length;i++){
+      str=str.concat(selectedTechnology[i]);
+      str1=str1.concat(selectedTechnology[i]);
+      str1=str1.concat("|");
+      str=str.concat(" ");
+  }
+  
+  const res=await  axios.get(`http://localhost:8080/api/viewSkills/${str}`);
+  setSkillData(res.data);
+  SetResourceData({ ...resourcedata, skillData: str1 });
+  
+  
   };
   // console.log(technology);
   // const technologydata = [{ value: 1, label: "Java" }];
@@ -206,8 +251,17 @@ export const ResourceRequisition = () => {
 
   var [domain, setDomain] = useState();
   var handledomain = (e) => {
-    setDomain(Array.isArray(e) ? e.map((x) => x.label) : []);
-    SetResourceData({ ...resourcedata, domainknowledge: e.target.value });
+    let { options } = e.target;
+    options = Array.apply(null, options)
+    const selectedValues = options.filter(x => x.selected).map(x => x.value);
+    setDomain(selectedValues)
+    let str1= "";
+      for(let i=0;i<domain.length;i++){
+        str1=str1.concat(domain[i]);
+        str1=str1.concat("|");
+      }
+
+      SetResourceData({ ...resourcedata, domain: str1 });
   };
 
   const [Passport, setPassport] = useState(true);
@@ -216,7 +270,7 @@ export const ResourceRequisition = () => {
   const [statedata, setStatedata] = useState([]);
   const handlecountry = async (e) => {
     let id = e.target.value;
-    console.log('ID:', id);
+    
     const countryresult = await axios.get(
       `http://localhost:8080/api/country/state/${id}`
     );
@@ -234,11 +288,15 @@ export const ResourceRequisition = () => {
     SetResourceData({ ...resourcedata, worklocationstate: e.target.value });
   };
 
-  const handlesave = (resourcedata) => {
-    localStorage.setItem(
-      "resourcerequisitiondata",
-      JSON.stringify(resourcedata)
-    );
+  const handlesave = (e) => {
+    e.preventDefault();
+    const resourceResult = axios.post(`http://localhost:8080/api/saveResourceRequirement/`, resourcedata );
+    
+      console.log("resourceResult save" ,resourcedata);
+//     localStorage.setItem(
+//       "resourcerequisitiondata",
+//       // JSON.stringify(resourcedata)
+// );
   };
   return (
     <div className="container my-5">
@@ -276,7 +334,7 @@ export const ResourceRequisition = () => {
                 <input
                   type="text"
                   className="form-control form-control-sm"
-                  disabled
+                  // disabled
                   placeholder={employee.employeeName}
                   onChange={(e) =>
                     SetResourceData({
@@ -289,7 +347,7 @@ export const ResourceRequisition = () => {
               <label className="col-sm-2 col-form-lable">Created On:</label>
               <div className="col-sm-3">
                 <input
-                  type="text"
+                  type="date"
                   className="form-control form-control-sm"
                   disabled
                   onChange={(e) =>
@@ -310,7 +368,7 @@ export const ResourceRequisition = () => {
                 <input
                   type="text"
                   className="form-control form-control-sm"
-                  disabled
+                  // disabled
                   placeholder={employee.employeeId}
                   onChange={(e) =>
                     SetResourceData({
@@ -378,8 +436,6 @@ export const ResourceRequisition = () => {
                 })}
               </select>
               <br /><br />
-              <b>Output:</b>
-              <pre>{JSON.stringify(selectedList)}</pre>
               </div>
               <label className="col-sm-1 col-form-lable"></label>
             </div>
@@ -391,16 +447,23 @@ export const ResourceRequisition = () => {
                 <input
                   type="text"
                   className="form-control form-control-m"
-                  disabled
+                  // disabled
                 />
               </div>
               <label className="col-sm-2 col-form-lable">Technology:</label>
               <div className="col-sm-3">
-                <Select
+                {/* <Select
                   isMulti
                   options={technologyData.map((item)=>({value:item.technologyId,label:item.technology}))}
                   onChange={handleTechnology}
-                ></Select>
+                ></Select> */}
+                 <select multiple name="list-box" onChange={handleTechnology}>
+                {technologyData.map((item) => {
+                  return  <option id={item.technologyId} value={item.technologyId}>
+                            {item.technology}
+                          </option>
+                })}
+              </select>
               </div>
 
               <label className="col-sm-1 col-form-lable"></label>
@@ -412,24 +475,41 @@ export const ResourceRequisition = () => {
                 Require Domain Knowledge:
               </label>
               <div className="col-sm-3">
-                <Select
+                {/* <Select
                   isMulti
                   options={viewDomainsdata.map((item) => ({
                     value: item.domainId,
                     label: item.domainKnowledge,
                   }))}
                   onClick={handledomain}
-                ></Select>
+                ></Select> */}
+                <select multiple name="list-box" onChange={handledomain}>
+                {viewDomainsdata.map((item) => {
+                  return  <option id={item.domainId} value={item.domainId}>
+                            {item.domainKnowledge}
+                          </option>
+                })}
+              </select>
               </div>
               <label className="col-sm-2 col-form-lable">
                 Technology Specialization:
               </label>
               <div className="col-sm-3">
-                <Select
+                {/* <Select
                   isMulti
-                  options={technologyspecdata}
-                  onChange={handleTechnologyspec}
-                ></Select>
+                  // options={skillData.map((item) => ({
+                  //   value: item.skillId,
+                  //   label: item.skill,
+                  // }))}
+                  onChange={handleTechnology}
+                ></Select> */}
+                <select multiple name="list-box" onChange={handleTechnologySpecialization}>
+                {skillData.map((item) => {
+                  return  <option id={item.skillId} value={item.skillId}>
+                            {item.skill}
+                          </option>
+                })}
+              </select>
               </div>
               <label className="col-sm-1 col-form-lable"></label>
             </div>
@@ -790,7 +870,7 @@ export const ResourceRequisition = () => {
                     id="radio1"
                     name="visa"
                     value="option1"
-                    disabled={Passport}
+                    // disabled={Passport}
                     onClick={(e) =>
                       SetResourceData({
                         ...resourcedata,
@@ -811,7 +891,7 @@ export const ResourceRequisition = () => {
                     id="radio1"
                     name="visa"
                     value="option1"
-                    disabled={Passport}
+                    // disabled={Passport}
                   />
                   <label className="form-check-label" htmlFor="radio1">
                     No
@@ -886,7 +966,7 @@ export const ResourceRequisition = () => {
                 <input
                   type="text"
                   className="form-control form-control-sm"
-                  disabled
+                  // disabled
                 />
               </div>
               <label className="col-sm-1 col-form-lable"></label>
@@ -950,7 +1030,7 @@ export const ResourceRequisition = () => {
                 <input
                   type="number"
                   className="form-control form-control-sm"
-                  disabled={relocate}
+                  // disabled={relocate}
                   onChange={(e) =>
                     SetResourceData({
                       ...resourcedata,
@@ -968,7 +1048,7 @@ export const ResourceRequisition = () => {
               <label className="col-sm-2 col-form-lable"></label>
               <button
                 className="col-sm-1 btn-outline-warning btn-sm "
-                onClick={() => handlesave(resourcedata)}
+                onClick={handlesave}
               >
                 SAVE
               </button>
