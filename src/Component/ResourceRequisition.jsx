@@ -288,19 +288,20 @@ export const ResourceRequisition = () => {
     SetResourceData({ ...resourcedata, worklocationstate: e.target.value });
   };
 
-  const handlesave = (e) => {
+  const handlesave = async (e) => {
     e.preventDefault();
-    const resourceResult = axios.post(`http://localhost:8080/api/saveResourceRequirement/`, resourcedata );
-    
-      console.log("resourceResult save" ,resourcedata);
+    const url = "http://localhost:8080/api/saveResourceRequirement/";
+    console.log(resourcedata);
+    const resourceResult =await axios.post(url, JSON.stringify(resourcedata) );
 //     localStorage.setItem(
 //       "resourcerequisitiondata",
 //       // JSON.stringify(resourcedata)
 // );
   };
   return (
+    <form >
     <div className="container my-5">
-      <div className="text-center">
+      <div className="text-center"> 
         <h1 className="h1">Resourse Requirement</h1>
       </div>
       <div className="text-end">
@@ -334,7 +335,7 @@ export const ResourceRequisition = () => {
                 <input
                   type="text"
                   className="form-control form-control-sm"
-                  // disabled
+                  disabled
                   placeholder={employee.employeeName}
                   onChange={(e) =>
                     SetResourceData({
@@ -349,7 +350,7 @@ export const ResourceRequisition = () => {
                 <input
                   type="date"
                   className="form-control form-control-sm"
-                  disabled
+                  // disabled
                   onChange={(e) =>
                     SetResourceData({
                       ...resourcedata,
@@ -368,7 +369,7 @@ export const ResourceRequisition = () => {
                 <input
                   type="text"
                   className="form-control form-control-sm"
-                  // disabled
+                  disabled
                   placeholder={employee.employeeId}
                   onChange={(e) =>
                     SetResourceData({
@@ -447,7 +448,7 @@ export const ResourceRequisition = () => {
                 <input
                   type="text"
                   className="form-control form-control-m"
-                  // disabled
+                  disabled
                 />
               </div>
               <label className="col-sm-2 col-form-lable">Technology:</label>
@@ -870,7 +871,7 @@ export const ResourceRequisition = () => {
                     id="radio1"
                     name="visa"
                     value="option1"
-                    // disabled={Passport}
+                    disabled={Passport}
                     onClick={(e) =>
                       SetResourceData({
                         ...resourcedata,
@@ -891,7 +892,7 @@ export const ResourceRequisition = () => {
                     id="radio1"
                     name="visa"
                     value="option1"
-                    // disabled={Passport}
+                    disabled={Passport}
                   />
                   <label className="form-check-label" htmlFor="radio1">
                     No
@@ -923,7 +924,7 @@ export const ResourceRequisition = () => {
               </label>
 
               <div className="col-sm-2">
-                <input type="text" className="form-control form-control-sm" />
+                <input disabled type="text" className="form-control form-control-sm" />
               </div>
               <label className="col-sm-1 col-form-lable"></label>
               <label className="col-sm-2 col-form-lable">Sales Order No:</label>
@@ -949,7 +950,7 @@ export const ResourceRequisition = () => {
                 Approver Employee Name:
               </label>
               <div className="col-sm-3">
-                <input type="text" className="form-control form-control-sm" />
+                <input disabled type="text" className="form-control form-control-sm" />
               </div>
               <label className="col-sm-2 col-form-lable">JRs No:</label>
               <div className="col-sm-1">
@@ -966,7 +967,7 @@ export const ResourceRequisition = () => {
                 <input
                   type="text"
                   className="form-control form-control-sm"
-                  // disabled
+                  disabled
                 />
               </div>
               <label className="col-sm-1 col-form-lable"></label>
@@ -1030,7 +1031,7 @@ export const ResourceRequisition = () => {
                 <input
                   type="number"
                   className="form-control form-control-sm"
-                  // disabled={relocate}
+                  disabled={relocate}
                   onChange={(e) =>
                     SetResourceData({
                       ...resourcedata,
@@ -1066,5 +1067,6 @@ export const ResourceRequisition = () => {
         </div>
       </div>
     </div>
+    </form>
   );
 };
