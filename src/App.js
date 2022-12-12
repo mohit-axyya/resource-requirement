@@ -5,7 +5,11 @@ import { BrowserRouter, Route, Router, Routes } from 'react-router-dom';
 import ResourceForm from './Component/ResourceForm';
 import { ResourceRequisition } from "./Component/ResourceRequisition";
 import SavedData from './Component/SavedData';
-import Popup from './Component/Popup';
+import FormModal from './Component/FormModal';
+import 'bootstrap/dist/js/bootstrap.min.js';
+import 'bootstrap/dist/js/bootstrap.js';
+import 'bootstrap/dist/js/bootstrap.bundle.js';
+
 function App() {
   
   return (
@@ -16,7 +20,7 @@ function App() {
           <Route path='/myresource' element={<ResourceForm />} />
           <Route path='/resource' element={<ResourceRequisition />} />
           <Route path='/saveddata' element={<SavedData />} />
-          <Route path='/popup' element={<Popup />} />
+          <Route path='/popup' element={<FormModal />} />
         </Routes>
       </BrowserRouter>
     </>

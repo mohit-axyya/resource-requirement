@@ -1,11 +1,15 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react"
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import FormModal from "./FormModal";
+
 
 const ResourceForm = () => {
 
+    const navigate = useNavigate();
     const loginEmployeeData = useLocation();
-    
+    const modalValue = useLocation();
+
     const [resourceRequisitionData, setResourceRequisitionData] = useState({});
     const [hiringTypeData, setHiringTypeData] = useState([]);
     const [typeOfDeveloper, setTypeOfDeveloper] = useState([]);
@@ -24,18 +28,19 @@ const ResourceForm = () => {
     const [passportData, setPassportData] = useState(false);
     const [visaData, setVisaData] = useState(false);
     const [readyToRelocate, setReadyToRelocate] = useState(false);
-
+    const [showModal, setShowModal] = useState(false);
     
-    console.log("resource object", resourceRequisitionData)
-    console.log("hiring type ", hiringTypeData)
+    console.log("resource object", resourceRequisitionData);
     
     const readyToRelocateDisable = readyToRelocate;
     const getEmployeeDataAndSetInResourceRequisition = async () => {
-        setResourceRequisitionData({...resourceRequisitionData, resEmployeeId: loginEmployeeData.state.employeeId})
+        setResourceRequisitionData({...resourceRequisitionData, resManagerName: loginEmployeeData.state.managerName})
     }
-    const getApproverDetailsAndSetInResourceRequisistion = async () => {
+    const getEmployeeIdAndSetInResourceRequisition = async () => {
+        setResourceRequisitionData({...resourceRequisitionData, resEmployeeId: loginEmployeeData.state.employeeId})      
+    }
+    const getEmployeeManagerNaneAndSetResourceRequisition = async () => {
         setResourceRequisitionData({...resourceRequisitionData, resManagerId: loginEmployeeData.state.managerId}) 
-        setResourceRequisitionData({...resourceRequisitionData, resManagerName: loginEmployeeData.state.managerName}) 
     }
     const getHiringData = async () => {
         const hiringdata = await axios.get("http://localhost:8080/api/hiringType");
@@ -56,8 +61,12 @@ const ResourceForm = () => {
         const countrydata = await axios.get("http://localhost:8080/api/country");
         setCountryData(countrydata.data);
     }
-
-    const getQualificationData = async (event) => {
+    const getStateData = async () => {
+        let stateid = resourceRequisitionData.resCountryData[0].countryId;
+        const statedata = await axios.get(`http://localhost:8080/api/country/state/${stateid}`);
+        setStateData(statedata.data)
+    }
+    const getQualificationData = async () => {
         const qualificationdata = await axios.get("http://localhost:8080/api/qualification");
         setQualificationData(qualificationdata.data);       
     }
@@ -69,7 +78,8 @@ const ResourceForm = () => {
         getTypeOfDeveloper();
         getDomainData();
         getEmployeeDataAndSetInResourceRequisition();
-        getApproverDetailsAndSetInResourceRequisistion();
+        getEmployeeIdAndSetInResourceRequisition();
+        getEmployeeManagerNaneAndSetResourceRequisition();
     }, []);
 
     const handleHiringData = async( event ) => {
@@ -83,37 +93,48 @@ const ResourceForm = () => {
     }
     const handleTypeOfDeveloper = async (event) => {
         let { options } = event.target;
-        let tech = options.selectedIndex;
+        let techSpecialization = [...options].filter(x => x.selected).map(x => x.value);
+        let tech = techSpecialization.filter(el => typeof el !== 'number').join(' ')
+        let selectedTypeOfDeveloper = typeOfDeveloper.filter((key) => {
+            if(key.resourceTypeId == event.target.value) {
+                return true;
+            } 
+            return false;
+        })
+        setResourceRequisitionData({...resourceRequisitionData, resTypeOfDeveloper: selectedTypeOfDeveloper})
         let technologydata = await axios.get(`http://localhost:8080/api/viewTechnology/${tech}`);
         setTechnologyData(technologydata.data);
-        setResourceRequisitionData({...resourceRequisitionData, resTypeOfDeveloper: event.target.value})       
+        // setResourceRequisitionData({...resourceRequisitionData, resTypeOfDeveloper: event.target.value})       
     }
 
     const handleTechnology = async (event) => {
         let { options } = event.target;
         let techSpecialization = [...options].filter(x => x.selected).map(x => x.value);
         let techCheck = techSpecialization.filter(el => typeof el !== 'number').join(' ')
-    
+        // let selectedTechnologydata = technologyData.filter((key) => {
+        //     if(key.technologyId == event.target.value) {
+        //         return true;
+        //     } 
+        //     return false;
+        // })
+        setResourceRequisitionData({...resourceRequisitionData, resTechnology : techCheck}) 
         const skillsData = await axios.get(`http://localhost:8080/api/viewSkills/${techCheck}`);
         setTechnologySpecialization(skillsData.data)
-        setResourceRequisitionData({...resourceRequisitionData, resTechnology : techCheck}) 
+        
     }
 
     const handleCountryData = async (event) => {
-        let selectedCountry = countryData.filter((key, object) => {
+        let selectedCountry = countryData.filter((key) => {
             if(key.countryId == event.target.value) {
                 return true;
-            } 
+            }
             return false;
         })
         setResourceRequisitionData({...resourceRequisitionData, resCountryData : selectedCountry }) 
     }
 
     const handleStateData = async (event) =>{
-        let stateid = resourceRequisitionData.resCountryData[0].countryId;
-        const statedata = await axios.get(`http://localhost:8080/api/country/state/${stateid}`);
-        setStateData(statedata.data)
-        let selectedState = stateData.filter((key, object) => {
+        let selectedState = stateData.filter((key) => {
             if(key.stateId == event.target.value) {
                 return true;
             } 
@@ -123,7 +144,7 @@ const ResourceForm = () => {
     }
 
     const handleCityData = async (event) => {
-        let cityid = resourceRequisitionData.resStateData;
+        let cityid = resourceRequisitionData.resStateData[0].stateId;
         const citydata = await axios.get(`http://localhost:8080/api/country/state/city/${cityid}`);
         setCityData(citydata.data);
         let selectedCity = cityData.filter((key, object) => {
@@ -135,13 +156,13 @@ const ResourceForm = () => {
         setResourceRequisitionData({...resourceRequisitionData, resCityData : selectedCity}) 
     }
     const handleGraduation = async (event) => {
-        let qualificationid = resourceRequisitionData.resQualification;
+        let qualificationid = resourceRequisitionData.resQualification[0].qualificationId;
         const graduationdata = await axios.get(`http://localhost:8080/api/viewQualificationDegree/${qualificationid}`);
         setGraduationData(graduationdata.data);
     }
 
     const handleGrduationSpecialization = async () => {
-        let graduationid = resourceRequisitionData.resGraduation;
+        let graduationid = resourceRequisitionData.resGraduation[0].degreeId;
         const graduationspecializationdata = await axios.get(`http://localhost:8080/api/viewQualificationSpecialization/${graduationid}`);
         setGraduationSpecializationData(graduationspecializationdata.data);
     }
@@ -156,32 +177,38 @@ const ResourceForm = () => {
         const url = "http://localhost:8080/api/saveResourceRequirement/";
         const reqData = {
                 employee : loginEmployeeData.state,
-                hiringType : hiringTypeData.data,
+                hiringType : resourceRequisitionData.resHiringTypeData[0],
                 createdOn : resourceRequisitionData.resCreatedOn,
-                country : resourceRequisitionData.resCountryId,
-                state : resourceRequisitionData.resStateData,
-                city : resourceRequisitionData.resCityData,
+                country : resourceRequisitionData.resCountryData[0],
+                state : resourceRequisitionData.resStateData[0],
+                city : resourceRequisitionData.resCityData[0],
                 relocationState : resourceRequisitionData.resReadyToRelocate,
-                
+                availabilityDate : resourceRequisitionData.resResourceAvailableDate,
                 passportStatus : resourceRequisitionData.resPassportData,
                 visa : resourceRequisitionData.resVisaData,
                 positions : resourceRequisitionData.resPositions,
                 experience : resourceRequisitionData.resYearsOfExp,
-                resourceType : typeOfDeveloper.data,
-                technologies : technologyData.data,
-                skills : technologySpecialization.data,
+                resourceType : resourceRequisitionData.resTypeOfDeveloper[0],
+                technologies : resourceRequisitionData.resTechnology,
+                skills : resourceRequisitionData.resTechnologySpecializationData,
                 domainKnowledges : resourceRequisitionData.resDomainKnowledge,
                 salesOrderNo : resourceRequisitionData.resSalesOrderNo,
                 noOfJRs : resourceRequisitionData.resSalesOrderNo,
                 jobDescriptionDoc : resourceRequisitionData.resJRno,
-                qualification : qualificationData.data,
-                qualificationDegree : graduationData.data,
-                qualificationSpecialization : graduationSpecializationData.data,
-                approverId : resourceRequisitionData.resManagerId,
-                approverName : resourceRequisitionData.resManagerName,
-                approvedDate : resourceRequisitionData.resApprovedDate
+                qualification : resourceRequisitionData.resQualification[0],
+                qualificationDegree : resourceRequisitionData.resGraduation[0],
+                qualificationSpecialization : resourceRequisitionData.resGraduationSpecialization[0],
+                approverId : loginEmployeeData.state.managerId,
+                approverName : loginEmployeeData.state.managerName,
+                approvedDate : resourceRequisitionData.resApprovedDate,
         }
         const resourceResult =await axios.post(url,  reqData);
+        console.log("data is sent", resourceResult.status)
+        if(resourceResult.status == 200) {
+            setShowModal(true);
+        } else {
+            setShowModal(false);
+        }
     }
     return (
         <>
@@ -189,6 +216,40 @@ const ResourceForm = () => {
                 <div className="h-16 px-8 flex items-center">
                     <p className="text-white font-bold">Resource Requirement <span className='text-red-500'></span></p>
                 </div>
+            </div>
+            {/* //showing modal */}
+            <div>
+                {showModal && 
+                    <>
+                      <div
+                        className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
+                        <div className="relative w-auto my-6 mx-auto max-w-3xl">
+                          {/*content*/}
+                          <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
+                            {/*header*/}
+                            <div className="flex items-start justify-between p-5  border-b border-solid border-slate-200 rounded-t">
+                              <h3 className="text-l font-semibold text-green-600 mt-2">
+                                Data Saved Successfully
+                              </h3> 
+                              <button
+                                className="p-1 ml-auto border-0 text-black-500 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
+                                onClick={() => setShowModal(false)}
+                              >
+                                <span className=" text-black h-6 w-6 text-2xl block outline-none focus:outline-none">
+                                  ×
+                                </span>
+                              </button>
+                            </div>
+                            {/*body*/}
+                            
+                            {/*footer*/}
+                            
+                          </div>
+                        </div>
+                      </div>
+                      <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
+                    </>
+                }
             </div>
             <div className="px-5 py-5">
                 <div className="shadow rounded p-10 mx-20">
@@ -295,6 +356,12 @@ const ResourceForm = () => {
                                 let { options } = event.target;
                                 let techSpecialization = [...options].filter(x => x.selected).map(x => x.value);
                                 let techspec = techSpecialization.filter(el => typeof el !== 'number').join(' ')
+                                // let selectedTechnologyspec = technologySpecialization.filter((key) => {
+                                //     if(key.skillId == event.target.value) {
+                                //         return true;
+                                //     } 
+                                //     return false;
+                                // })
                                 setResourceRequisitionData({...resourceRequisitionData, resTechnologySpecializationData : techspec})
                             }}>
                                 {technologySpecialization.map((item) => {
@@ -320,7 +387,14 @@ const ResourceForm = () => {
                             <label className="px-2 text-blue-700">Qualification</label>
                             <select className="px-2 py-1 text-grey-600 rounded border w-48" onClick={getQualificationData}
                             onChange={(event) =>{
-                                setResourceRequisitionData({...resourceRequisitionData, resQualification: event.target.value});
+                                let selectedQualificationData = qualificationData.filter((key) => {
+                                    if(key.qualificationId == event.target.value) {
+                                        return true;
+                                    }
+                                    return false;
+                                })
+                                
+                                setResourceRequisitionData({...resourceRequisitionData, resQualification: selectedQualificationData});
                             }}>
                                 <option value="">Select Qualification</option>
                                 {qualificationData.map((qualification) => {
@@ -333,7 +407,7 @@ const ResourceForm = () => {
                         <div className="absolute left-0 top-0 ">
                             <label className="text-blue-700">State</label>
                             <select defaultValue={''} id="states" className="ml-24 px-2 py-1 text-grey-600 rounded border w-52"
-                            onClick={handleStateData}>
+                            onClick={getStateData} onChange={handleStateData}>
                                 <option value='' selected >select state</option>
                                 {stateData.map((statedata) => {
                                     return ( <option key={statedata.stateId} id={statedata.stateId} value={statedata.stateId}>{statedata.stateName}</option>);
@@ -344,7 +418,13 @@ const ResourceForm = () => {
                             <label className="mx-2 px-2 text-blue-700">Graduation</label>
                             <select className="px-2 py-1 text-grey-600 rounded border w-48" onClick={handleGraduation}
                             onChange={(event) =>{
-                                setResourceRequisitionData({...resourceRequisitionData, resGraduation: event.target.value});
+                                let selectedGraduationData = graduationData.filter((key) => {
+                                    if(key.degreeId == event.target.value) {
+                                        return true;
+                                    }
+                                    return false;
+                                })
+                                setResourceRequisitionData({...resourceRequisitionData, resGraduation: selectedGraduationData});
                             }}>
                                 <option value="">Select Graduation</option>
                                 {graduationData.map((graduation) => {
@@ -368,7 +448,13 @@ const ResourceForm = () => {
                             <label className="mx-2 px-2 text-blue-700">Graduation Specialization</label>
                             <select className="px-2 py-1 text-grey-600 rounded border w-48" onClick={handleGrduationSpecialization}
                             onChange={(event) =>{
-                                setResourceRequisitionData({...resourceRequisitionData, resGraduationSpecialization: event.target.value});
+                                let selectedGraduationSpecData = graduationSpecializationData.filter((key) => { 
+                                    if(key.specializationId == event.target.value) {
+                                        return true;
+                                    }
+                                    return false;
+                                })
+                                setResourceRequisitionData({...resourceRequisitionData, resGraduationSpecialization: selectedGraduationSpecData});
                             }}>
                                 <option value="">Select Graduation Specialization</option>
                                 {graduationSpecializationData.map((graduationspec) => {
@@ -380,7 +466,10 @@ const ResourceForm = () => {
                     <div className="relative mt-0 h-10">
                         <div className="absolute left-0 top-0 ">
                             <label className="text-blue-700"><span className="block">Resource</span> Available Date</label>
-                            <input className="px-2 ml-10 w-52 py-1 text-grey-600 rounded border" type="date"/>
+                            <input className="px-2 ml-10 w-52 py-1 text-grey-600 rounded border" type="date"
+                            onChange={(event) =>{
+                                setResourceRequisitionData({...resourceRequisitionData, resResourceAvailableDate: event.target.value});
+                            }}/>
                         </div>
                         <div className="absolute mt-3 top-0 right-0">
                             <label className="mx-2 px-2 text-blue-700">Post-Graduation</label>
