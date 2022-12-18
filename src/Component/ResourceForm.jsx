@@ -174,7 +174,7 @@ const ResourceForm = () => {
     const handleSave = async (event) => {
 
         event.preventDefault();
-        const url = "http://localhost:8080/api/saveResourceRequirement/";
+        const url = "http://localhost:8080/api/saveTempResourceRequirement/";
         const reqData = {
                 employee : loginEmployeeData.state,
                 hiringType : resourceRequisitionData.resHiringTypeData[0],
@@ -268,7 +268,7 @@ const ResourceForm = () => {
                     <div className="relative mt-3 h-10">
                         <div className="absolute left-0 top-0 ">
                             <label className="mx-1 text-blue-700">Employee Id</label>
-                            <input className="mx-5 px-2 py-1 text-grey-600 rounded border" value={loginEmployeeData.state.employeeId}type="text" 
+                            <input className="mx-5 ml-11 px-2 py-1 text-grey-600 rounded border" value={loginEmployeeData.state.employeeId}type="text" 
                             disabled/>
                         </div>
                         <div className="absolute top-0 right-0">
@@ -322,10 +322,10 @@ const ResourceForm = () => {
                     <div className="relative mt-3 h-10">
                         <div className="absolute left-0 top-0 ">
                             <label className="text-blue-700">Requested By</label>
-                            <input className="px-2 mx-5 py-1 text-grey-600 rounded border" type="text"/>
+                            <input className="px-2 mx-5 ml-11  py-1 text-grey-600 rounded border" type="text"/>
                         </div>
                         <div className="absolute top-0 right-0">
-                            <label className="mx-2 px-2 text-blue-700">Technology</label>
+                            <label className="mx-2 px-2 text-blue-700 mr-5">Technology</label>
                             <select defaultValue={'select technology'} className="w-48 h-10 text-grey-600 rounded border" multiple
                             onChange={handleTechnology}>
                                 {technologyData.map((tech, key) => {
@@ -338,7 +338,7 @@ const ResourceForm = () => {
                     <div className="relative mt-3 h-10">
                         <div className="absolute left-0 top-0 ">
                             <label className="text-blue-700">Domain Knowledge</label>
-                            <select defaultValue={'select domain'} className="w-48 h-10 text-grey-600 rounded border" multiple
+                            <select defaultValue={'select domain'} className="w-48 h-10 ml-1 text-grey-600 rounded border" multiple
                             onChange={(event) => {
                                 setResourceRequisitionData({...resourceRequisitionData, resDomainKnowledge: event.target.value})
                             }}>
@@ -350,7 +350,7 @@ const ResourceForm = () => {
                             </select>
                         </div>
                         <div className="absolute top-0 right-0">
-                            <label className="mx-2 px-2 text-blue-700">Technology Specialization</label>
+                            <label className="mx-2 px-2 text-blue-700 mr-5">Technology Specialization</label>
                             <select defaultValue={'select specialization'} className="w-48 h-10 text-grey-600 rounded border" multiple
                             onChange={(event) => {
                                 let { options } = event.target;
@@ -384,7 +384,7 @@ const ResourceForm = () => {
                             </select>
                         </div>
                         <div className="absolute top-0 right-0">
-                            <label className="px-2 text-blue-700">Qualification</label>
+                            <label className="px-2 text-blue-700 mr-5">Qualification</label>
                             <select className="px-2 py-1 text-grey-600 rounded border w-48" onClick={getQualificationData}
                             onChange={(event) =>{
                                 let selectedQualificationData = qualificationData.filter((key) => {
@@ -415,7 +415,7 @@ const ResourceForm = () => {
                             </select>
                         </div>
                         <div className="absolute top-0 right-0">
-                            <label className="mx-2 px-2 text-blue-700">Graduation</label>
+                            <label className="mx-2 px-2 text-blue-700 mr-5">Graduation</label>
                             <select className="px-2 py-1 text-grey-600 rounded border w-48" onClick={handleGraduation}
                             onChange={(event) =>{
                                 let selectedGraduationData = graduationData.filter((key) => {
@@ -445,7 +445,7 @@ const ResourceForm = () => {
                             </select>
                         </div>
                         <div className="absolute top-0 right-0">
-                            <label className="mx-2 px-2 text-blue-700">Graduation Specialization</label>
+                            <label className="mx-2 px-2 text-blue-700 mr-5">Graduation Specialization</label>
                             <select className="px-2 py-1 text-grey-600 rounded border w-48" onClick={handleGrduationSpecialization}
                             onChange={(event) =>{
                                 let selectedGraduationSpecData = graduationSpecializationData.filter((key) => { 
@@ -466,13 +466,13 @@ const ResourceForm = () => {
                     <div className="relative mt-0 h-10">
                         <div className="absolute left-0 top-0 ">
                             <label className="text-blue-700"><span className="block">Resource</span> Available Date</label>
-                            <input className="px-2 ml-10 w-52 py-1 text-grey-600 rounded border" type="date"
+                            <input className="px-2 ml-8 w-52 py-1 text-grey-600 rounded border" type="date"
                             onChange={(event) =>{
                                 setResourceRequisitionData({...resourceRequisitionData, resResourceAvailableDate: event.target.value});
                             }}/>
                         </div>
                         <div className="absolute mt-3 top-0 right-0">
-                            <label className="mx-2 px-2 text-blue-700">Post-Graduation</label>
+                            <label className="mx-2 px-2 text-blue-700  mr-5">Post-Graduation</label>
                             <select className="px-2 py-1 text-grey-600 rounded border w-48" onClick={getPostGraduationData}
                             onChange={(event) =>{
                                 setResourceRequisitionData({...resourceRequisitionData, resPostGraduation: event.target.value});
@@ -484,13 +484,13 @@ const ResourceForm = () => {
                             </select>
                         </div>
                     </div>
-                    <div className="relative mt-4 h-10">
+                    <div className="relative mt-6 h-10">
                         <div className="absolute left-0 top-0 ">
-                            <label className="text-blue-700">TimeZone Shifts</label>
-                            <input className="px-2 mx-4 mt-2 py-1 text-grey-600 rounded border" type="text"/>
+                            <label className="text-blue-700 mr-2">TimeZone Shifts</label>
+                            <input className="px-2 mx-2 mt-3 ml-3 py-1 text-grey-600 rounded border" type="text"/>
                         </div>
                         <div className="absolute top-0 right-0">
-                            <label className="mx-2 px-2 text-blue-700">Post-Graduation Specialization</label>
+                            <label className="mx-2 px-2 text-blue-700 mr-5">Post-Graduation Specialization</label>
                             <select className="px-2 py-1 text-grey-600 rounded border w-48" onClick={handlePostGraduationSpecialization}
                             onChange={(event) =>{
                                 setResourceRequisitionData({...resourceRequisitionData, resPostGraduationSpecialization: event.target.value});
@@ -618,9 +618,9 @@ const ResourceForm = () => {
                                 }}/>
                         </div>
                         <div className="absolute top-0 right-0">
-                            <label className="mx-14 px-2 text-blue-700">Ready To Relocate</label>
+                            <label className="mx-14 px-2 text-blue-700 mr-10">Ready To Relocate</label>
                             {/* <input className="px-2 py-1 text-grey-600 rounded border " type="number"/> */}
-                            <input className="peer/yes px-2 py-1 mr-3" type="radio" value="true" name="readytorelocatestatus" 
+                            <input className="peer/yes px-2 py-1 mr-3 ml-8" type="radio" value="true" name="readytorelocatestatus" 
                                 onClick={() =>  {
                                     setReadyToRelocate(true);
                                     setResourceRequisitionData({...resourceRequisitionData, resReadyToRelocate: true});
@@ -637,7 +637,7 @@ const ResourceForm = () => {
                     </div>
                     <div className="relative mt-3 h-10">
                         <div className="absolute left-0 top-0 ">
-                            <label className="text-blue-700">Attach JD Document</label>
+                            <label className="text-blue-700 mr-10">JD Document</label>
                             <input className="px-2 mx-2 py-1 text-grey-600 rounded border w-25" type="file"/>
                         </div>
                         <div className="absolute top-0 right-0">
