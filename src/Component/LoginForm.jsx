@@ -2,6 +2,7 @@ import axios from "axios"
 import { useState } from "react"
 import { Link } from "react-router-dom"
 import { Navigate, useNavigate } from "react-router-dom"
+import { useHistory } from "react-router-dom";
 import ResourceForm from "./ResourceForm"
 
 
@@ -14,9 +15,7 @@ const LoginForm = () => {
     const navigate = useNavigate();
     const isError = false;
     const [showModal, setShowModal] = useState(false);
-
-
-
+    const [tempResourceData, setTempResourceData] = useState({});
     const handleEmail = (e) =>{
         let dang = 0;
         if(e.target.value === "") 
@@ -29,37 +28,38 @@ const LoginForm = () => {
         console.log(e.target.value);
         setPassword(e.target.value);
     }
-
-    
-    
+ 
    const handleContinue = ()=> {
-        console.log(employee, "employee and employeedata", employee.data)
+        console.log("employee ", employee.data)
         navigate('/myresource', { state : employee.data });
    }
-
-   const handleContinueToSavedata = ()=> {
+   let temp = [];
+   const handleContinueToSavedata = async ()=> {
         const empid = employee.data.employeeId;
-        const tempData = axios.get(`http://localhost:8080/api/getsaveddatabyemployeeid/${empid}`);
-        console.log("temp data",tempData);
+        const tempData = await axios.get(`http://localhost:8080/api/getsaveddatabyemployeeid/${empid}`);
+        
+        console.log("state temp data", tempData)
+        navigate('/saveddata', {state : tempData.data});
    }
    
 
     const getlogindata= async (e)=>{
         e.preventDefault();
-       const logindata= await axios.post(`http://localhost:8080/api/login/${email}&${password}`);
+       const logindata = await axios.post(`http://localhost:8080/api/login/${email}&${password}`);
+       console.log(logindata)
        setEmployeeData(logindata);
        if(logindata.data.msg === 'Invalid Login Credential'){
             navigate('/')
-            console.log("getting error msg")
             setErrorMsg(logindata.data.msg);
-            console.log("something " ,errorMsg);
        } else {
-            console.log(logindata)
-            setShowModal(true)
-            // navigate('/myresource',{ state : logindata.data})
-                // navigate('/myresource')
+            const empid = logindata.data.employeeId;
+            const checkTempDataInTable =await axios.get(`http://localhost:8080/api/getsaveddatabyemployeeid/${empid}`);
             
-               
+            if(checkTempDataInTable.data.length == 0) {
+                navigate('/myresource', { state : logindata.data });  
+            } else {
+                setShowModal(true);
+            }     
        }
     }
     return (
@@ -95,11 +95,11 @@ const LoginForm = () => {
                         <div className="grid justify-items-center px-1 py-3">
                             <div className="w-full">
                                 <label className="block self-auto text-gray-600 px-1 my-1 font-bold" >Email</label>
-                                <input type="email" onChange={handleEmail} className="  rounded h-8 border mt-2 px-7 py-2"/>
+                                <input type="email" onChange={handleEmail} className="  rounded h-8 border mt-2 px-2 w-60 py-2"/>
                     
                                 {/* <div className="h-14 w-full"> */}
                                 <label className="block text-gray-600 px-1 my-2 font-bold" >Password </label>
-                                <input type="password" onChange={handlePassword} className="rounded h-8 border mt-2 px-7 py-2"/>
+                                <input type="password" onChange={handlePassword} className="rounded h-8 border mt-2 px-2 py-2 w-60"/>
 
                                 <div className="items-center justify-center h-11 w-full my-4">
                                     <div>

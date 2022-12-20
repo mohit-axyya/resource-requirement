@@ -1,10 +1,12 @@
 import React from "react";
-
+import { useLocation, useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
-
+import useHistory from 'use-history'
 
 const SaveData = ()=> {
 
+  const tempData = useLocation();
+  console.log("temp data saved data ", tempData)
   // const [resource, setResource] = useState([])
 
   // useEffect(() =>{
@@ -47,18 +49,22 @@ const SaveData = ()=> {
               </tr>
             </thead>
             <tbody>
+              {tempData.state.map((item) => {
+                return (
               <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td>{item.tempResourceRequirementId}</td>
+                <td>{item.hiringType.hiringType}</td>
+                <td>{item.resourceType.resourceType}</td>
+                <td>{item.resourceType.resourceType}</td>
+                <td>{item.city.cityName}</td>
+                <td>{item.salesOrderNo}</td>
+                <td>{item.noOfJRs}</td>
+                <td>{item.createdOn}</td>
                 <td><Link to = "/myresource" className = "text-orange-600 mb-2" > Edit details </Link>
                 </td>
               </tr>
+                );  
+            })} 
             </tbody>
           </table>
         </div>

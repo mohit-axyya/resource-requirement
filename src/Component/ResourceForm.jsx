@@ -30,7 +30,7 @@ const ResourceForm = () => {
     const [readyToRelocate, setReadyToRelocate] = useState(false);
     const [showModal, setShowModal] = useState(false);
     
-    console.log("resource object", resourceRequisitionData);
+    
     
     const readyToRelocateDisable = readyToRelocate;
     const getEmployeeDataAndSetInResourceRequisition = async () => {
@@ -81,7 +81,8 @@ const ResourceForm = () => {
         getEmployeeIdAndSetInResourceRequisition();
         getEmployeeManagerNaneAndSetResourceRequisition();
     }, []);
-
+    console.log("in state key ", loginEmployeeData)
+    console.log("resource object", resourceRequisitionData);
     const handleHiringData = async( event ) => {
         let selectedHiringType = hiringTypeData.filter((key, object) => {
             if(key.hiringTypeId == event.target.value) {
@@ -171,6 +172,7 @@ const ResourceForm = () => {
         let postgraduationspecializationdata = await axios.get(`http://localhost:8080/api/viewQualificationSpecialization/${postgraduationspecializationid}`);
         setPostGraduationSpecialization(postgraduationspecializationdata.data);
     }
+    console.log("emp data", loginEmployeeData.state)
     const handleSave = async (event) => {
 
         event.preventDefault();
@@ -286,7 +288,7 @@ const ResourceForm = () => {
                         </div>
                         <div className="absolute top-0 right-0">
                             <label className="mx-2 px-40 text-blue-700">Years of Experience</label>
-                            <input className="px-2 py-1 text-grey-600 rounded border w-12" type="number" 
+                            <input className="px-2 py-1 text-grey-600 rounded border w-12" min='1' max='20' type="number" 
                             onChange={(e) => 
                                 setResourceRequisitionData({...resourceRequisitionData, resYearsOfExp: e.target.value})
                                 }/>
@@ -466,7 +468,7 @@ const ResourceForm = () => {
                     <div className="relative mt-0 h-10">
                         <div className="absolute left-0 top-0 ">
                             <label className="text-blue-700"><span className="block">Resource</span> Available Date</label>
-                            <input className="px-2 ml-8 w-52 py-1 text-grey-600 rounded border" type="date"
+                            <input className="px-2 ml-8 w-52 py-1 text-grey-600 rounded border" min='2023-01-12' type="date"
                             onChange={(event) =>{
                                 setResourceRequisitionData({...resourceRequisitionData, resResourceAvailableDate: event.target.value});
                             }}/>
@@ -638,7 +640,7 @@ const ResourceForm = () => {
                     <div className="relative mt-3 h-10">
                         <div className="absolute left-0 top-0 ">
                             <label className="text-blue-700 mr-10">JD Document</label>
-                            <input className="px-2 mx-2 py-1 text-grey-600 rounded border w-25" type="file"/>
+                            <input className="px-2 mx-2 py-1 text-grey-600 rounded border w-60" type="file"/>
                         </div>
                         <div className="absolute top-0 right-0">
                             <label className="mx-2 px-2 text-blue-700">Relocate Days</label>
