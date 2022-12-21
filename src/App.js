@@ -10,6 +10,7 @@ import 'bootstrap/dist/js/bootstrap.min.js';
 import 'bootstrap/dist/js/bootstrap.js';
 import HomePage from './Component/HomePage';
 import Aboutus from './Component/Aboutus';
+import Signin from './Component/SigninForm';
 
 function App() {
   
@@ -17,7 +18,8 @@ function App() {
     <>
       <BrowserRouter>
         <Routes>
-        <Route path='/home' element={<HomePage />} />
+          <Route path='/home' element={<HomePage />} />
+          <Route path='/signin' element={<Signin />} />
           <Route path='/login' element={<LoginForm />} />
           <Route path='/myresource' element={<ResourceForm />} />
           <Route path='/resource' element={<ResourceRequisition />} />
