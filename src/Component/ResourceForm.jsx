@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react"
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import FormModal from "./FormModal";
 
 
@@ -212,13 +212,22 @@ const ResourceForm = () => {
             setShowModal(false);
         }
     }
+
+    const handleLogout = () => {
+
+    }
     return (
         <>
+            
+        <div className="bg-fixed bg-no-repeat bg-cover  bg-[url('/public/Images/i5.jpg')]">
             <div className="bg-gray-800">
                 <div className="h-16 px-8 flex items-center">
                     <p className="text-white font-bold">Resource Requirement <span className='text-red-500'></span></p>
+                    <Link to = "/savedata" className = " pl-4 pt-3 text-orange-400 mb-2 font-semibold" > Saved Data </Link>
+                    <button className="flex justify-end rounded bg-orange-500 text-white rounded font-semibold hover:bg-red-700 px-8 py-2 mt-1 ml-[810px]" onClick={handleLogout}>Logout</button>
                 </div>
             </div>
+        
             {/* //showing modal */}
             <div>
                 {showModal && 
@@ -254,7 +263,7 @@ const ResourceForm = () => {
                 }
             </div>
             <div className="px-5 py-5">
-                <div className="shadow rounded p-10 mx-20">
+                <div className="shadow rounded p-10 mx-24 bg-gradient-to-r from-orange-400/90 to-zinc-100/70">
                     <div className="flex justify-center font-bold text-4xl tracking-wider"><h1>Resource Requisition</h1></div>
                     <div className="flex justify-end semi-bold text-2xl"><h1>Birla<span className="text-red-500">Soft</span></h1></div>
                     <hr></hr>
@@ -506,7 +515,7 @@ const ResourceForm = () => {
                     </div>
                     <div className="relative mt-3 h-10">
                         <div className="absolute left-0 top-0 ">
-                            <label className="text-blue-700">Work In Shifts</label>
+                            <label className="text-blue-700 ">Work In Shifts</label>
                             {/* <input className="px-2 py-1 ml-10 mr-3 text-grey-600 rounded border worksinshifts/draft" type="radio"/><label>Yes</label>
                             <input className="px-2 py-1 ml-10 mr-3 text-grey-600 rounded border worksinshifts-checked/draft:text-sky-500" type="radio"/><label>No</label> */}
                               <input className="peer/yes px-2 py-1 ml-10 mr-3" type="radio" value="true" name="workinshifts" 
@@ -514,14 +523,14 @@ const ResourceForm = () => {
                                     setWorkInShifts(true);
                                     setResourceRequisitionData({...resourceRequisitionData, resWorkInShifts: true});
                                     }}/>
-                                <label className="peer-checked/yes:text-red-500">Yes</label>
+                                <label className="peer-checked/yes:text-green-500 font-bold">Yes</label>
 
                                 <input className="peer/no px-2 py-1 ml-10 mr-3" type="radio" value="false" name="workinshifts" 
                                 onClick={() =>  {
                                     setWorkInShifts(false);
                                     setResourceRequisitionData({...resourceRequisitionData, resWorkInShifts: false});
                                     }}/>
-                                <label className="peer-checked/no:text-red-500">No</label>
+                                <label className="peer-checked/no:text-red-500 font-bold">No</label>
                         </div>
                         <div className="absolute top-0 right-0">
                             <label className="mx-2 px-2 text-blue-700">Other Qualification</label>
@@ -539,14 +548,14 @@ const ResourceForm = () => {
                                     setPassportData(true);
                                     setResourceRequisitionData({...resourceRequisitionData, resPassportData: true});
                                     }}/>
-                                <label className="peer-checked/yes:text-red-500">Yes</label>
+                                <label className="peer-checked/yes:text-green-500 font-bold">Yes</label>
 
                                 <input className="peer/no px-2 py-1 ml-10 mr-3" type="radio" value="false" name="passportstatus" 
                                 onClick={() =>  {
                                     setPassportData(false);
                                     setResourceRequisitionData({...resourceRequisitionData, resPassportData: false});
                                     }}/>
-                                <label className="peer-checked/no:text-red-500">No</label>
+                                <label className="peer-checked/no:text-red-500 font-bold">No</label>
                         </div>
                         <div className="absolute top-0 right-0">
                             <label className="mx-2 px-2 text-blue-700">Other Specialization</label>
@@ -565,14 +574,14 @@ const ResourceForm = () => {
                                     setVisaData(true);
                                     setResourceRequisitionData({...resourceRequisitionData, resVisaData: true});
                                     }}/>
-                                <label className="peer-checked/yes:text-red-500">Yes</label>
+                                <label className="peer-checked/yes:text-green-900 font-bold">Yes</label>
 
                                 <input className="peer/no px-2 py-1 ml-10 mr-3" type="radio" value="false" name="visastatus" disabled={!passportData}
                                 onClick={() =>  {
                                     setVisaData(false);
                                     setResourceRequisitionData({...resourceRequisitionData, resVisaData: false});
                                     }}/>
-                                <label className="peer-checked/no:text-red-500">No</label>
+                                <label className="peer-checked/no:text-red-500 font-bold">No</label>
                         </div>
                         <div className="absolute top-0 right-0">
                             <label className="mr-20 px-2 text-blue-700" >Positions</label>
@@ -662,6 +671,7 @@ const ResourceForm = () => {
                     </div>
                 </div>
             </div>
+        </div>
         </>
     );
 }

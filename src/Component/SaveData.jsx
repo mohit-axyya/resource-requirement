@@ -2,28 +2,24 @@ import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import useHistory from 'use-history'
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { library, icon } from '@fortawesome/fontawesome-svg-core'
+
+
 
 const SaveData = ()=> {
-
+  const navigate = useNavigate();
   const tempData = useLocation();
   console.log("temp data saved data ", tempData)
-  // const [resource, setResource] = useState([])
+  const handleDelete =()=>{
 
-  // useEffect(() =>{
 
-  //   getAllResource();
-  // }, [])
+  }  
 
-  // const getAllResource =()=> {
-  //         Resourceservice.getAllResource().then((response) => {
-  //               setResource(response.data)
-  //               console.log(response.data);
-  //             }).catch(error =>{
-  //               console.log(error);
-  //           })
-  //             }
-          
-  
+  const handledata =()=>{
+
+      navigate('/myresource')
+  }  
 
     return(
         <div className="rounded shadow m-6" >
@@ -46,6 +42,7 @@ const SaveData = ()=> {
                 <th>JR Number</th>
                 <th>Saved Date</th>
                 <th>Edit</th> 
+                <th>Delete</th>
               </tr>
             </thead>
             <tbody>
@@ -60,8 +57,8 @@ const SaveData = ()=> {
                 <td>{item.salesOrderNo}</td>
                 <td>{item.noOfJRs}</td>
                 <td>{item.createdOn}</td>
-                <td><Link to = "/myresource" className = "text-orange-600 mb-2" > Edit details </Link>
-                </td>
+                <td><span><FontAwesomeIcon className="faicons ml-4 cursor-pointer" icon='fa-solid fa-pen-to-square' onClick={handledata} /></span></td>
+                <td><span><FontAwesomeIcon icon="fa-solid fa-pen-to-square" onclick={handleDelete}/></span></td>
               </tr>
                 );  
             })} 
